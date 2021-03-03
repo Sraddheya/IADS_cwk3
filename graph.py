@@ -59,7 +59,18 @@ class Graph:
     # Attempt the swap of cities i and i+1 in self.perm and commit
     # commit to the swap if it improves the cost of the tour.
     # Return True/False depending on success.
-    # def trySwap(self,i):
+    def trySwap(self,i):
+        origVal = self.tourValue()
+        origPerm = self.perm[i]
+        self.perm[i] = self.perm[(i+1)%self.n]
+        self.perm[(i+1)%self.n] = origPerm
+        if origVal<self.tourValue():
+            self.perm[(i+1)%self.n] = self.perm[i]
+            self.perm[i] = origPerm
+            return False
+        else:
+            return True
+        
 
     # Consider the effect of reversiing the segment between
     # self.perm[i] and self.perm[j], and commit to the reversal
@@ -67,15 +78,15 @@ class Graph:
     # Return True/False depending on success.              
     # def tryReverse(self,i,j):
 
-    #def swapHeuristic(self,k):
-    #    better = True
-    #    count = 0
-    #    while better and (count < k or k == -1):
-    #        better = False
-    #        count += 1
-    #        for i in range(self.n):
-    #            if self.trySwap(i):
-    #               better = True
+    def swapHeuristic(self,k):
+        better = True
+        count = 0
+        while better and (count < k or k == -1):
+            better = False
+            count += 1
+            for i in range(self.n):
+                if self.trySwap(i):
+                   better = True
 
     #def TwoOptHeuristic(self,k):
     #    better = True
