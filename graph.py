@@ -54,6 +54,7 @@ class Graph:
         for i in range(self.n-1):
             val = val + self.dist[self.perm[i]][self.perm[i+1]]
         val = val + self.dist[self.perm[0]][self.perm[self.n-1]]
+        print(self.perm)
         return val
 
     # Attempt the swap of cities i and i+1 in self.perm and commit
@@ -103,4 +104,16 @@ class Graph:
     # Implement the Greedy heuristic which builds a tour starting
     # from node 0, taking the closest (unused) node as 'next'
     # each time.
-    # def Greedy(self):
+    def Greedy(self):
+        used = [0]*self.n
+        curNode = 0
+        for i in range(self.n-1):
+            min = max(self.dist[curNode])
+            for j in range(self.n):
+                if self.dist[curNode][j]<min and self.dist[curNode][j]!=0 and not(j in used):
+                    min = self.dist[curNode][j]
+                    used[i+1] = j
+            curNode = used[i+1]
+        self.perm = used
+            
+
