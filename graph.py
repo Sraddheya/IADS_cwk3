@@ -52,8 +52,8 @@ class Graph:
     def tourValue(self):
         val = 0
         for i in range(self.n-1):
-            val = val + self.dist[self.perm[i]][self.perm[i+1]]
-        val = val + self.dist[self.perm[0]][self.perm[self.n-1]]
+            val += self.dist[self.perm[i]][self.perm[i+1]]
+        val += self.dist[self.perm[0]][self.perm[self.n-1]]
         print(self.perm)
         return val
 
@@ -65,19 +65,28 @@ class Graph:
         origPerm = self.perm[i]
         self.perm[i] = self.perm[(i+1)%self.n]
         self.perm[(i+1)%self.n] = origPerm
-        if origVal<self.tourValue():
+        if origVal<=self.tourValue():
             self.perm[(i+1)%self.n] = self.perm[i]
             self.perm[i] = origPerm
             return False
         else:
             return True
-        
 
     # Consider the effect of reversiing the segment between
     # self.perm[i] and self.perm[j], and commit to the reversal
     # if it improves the tour value.
     # Return True/False depending on success.              
-    # def tryReverse(self,i,j):
+    def tryReverse(self,i,j):
+        origVal = self.tourValue()
+        revPerm = self.perm[i:j]
+        revPerm.reverse()
+        self.perm[i:j] = revPerm
+        if origVal<=self.tourValue():
+            revPerm.reverse()
+            self.perm[i:j] = revPerm
+            return False
+        else:
+            return True
 
     def swapHeuristic(self,k):
         better = True
@@ -89,16 +98,16 @@ class Graph:
                 if self.trySwap(i):
                    better = True
 
-    #def TwoOptHeuristic(self,k):
-    #    better = True
-    #    count = 0
-    #   while better and (count < k or k == -1):
-    #        better = False
-    #        count += 1
-    #        for j in range(self.n-1):
-    #            for i in range(j):
-    #                if self.tryReverse(i,j):
-    #                    better = True
+    def TwoOptHeuristic(self,k):
+        better = True
+        count = 0
+        while better and (count < k or k == -1):
+            better = False
+            count += 1
+            for j in range(self.n-1):
+                for i in range(j):
+                    if self.tryReverse(i,j):
+                        better = True
 
                         
     # Implement the Greedy heuristic which builds a tour starting
