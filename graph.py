@@ -124,5 +124,22 @@ class Graph:
                     used[i+1] = j
             curNode = used[i+1]
         self.perm = used
-            
 
+    def Prim(self):
+        weight = [9999]*self.n
+        parent = [0]*self.n
+        used = [0]
+        notUsed = self.perm
+        notUsed.remove(0)
+        while len(used)!=self.n:
+            for v in notUsed:
+                for u in used:
+                    if self.dist[u][v] < weight[v] and u!=v:
+                        weight[v] = self.dist[u][v]
+                        parent[v] = u
+            notUsed.remove(weight.index(min(weight)))
+            used.append(weight.index(min(weight)))
+            print(used)
+            weight[weight.index(min(weight))] = 9999
+        print(used)
+        print(parent)
