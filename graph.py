@@ -24,21 +24,22 @@ class Graph:
         self.perm = [0 for i in range(self.n)]
 
         if self.n!=n:
-            line = reader.readline()
-            point1 = [int(s) for s in line.split() if s.isdigit()]
+            line = reader.readlines()
+            node = [s.split() for s in line]
+            node = [[int(s[0]), int(s[1])] for s in node]
             for i in range(self.n):
-                for j in range(self.n):
+                point1 = node[i]
+                for j in range(i, self.n):
+                    distance = 0
                     if i!=j:
-                        line = reader.readline()
-                        point2 = [int(s) for s in line.split() if s.isdigit()]
+                        point2 = node[j]
                         distance = euclid(point1, point2)
-                        point1 = point2
                     self.dist[i][j] = distance
                     self.dist[j][i] = distance
         else:
-           while numLines>0:
+            while numLines>0:
                line = reader.readline()
-               numbers = [int(s) for s in line.split() if s.isdigit()]
+               numbers = [int(s) for s in line.split()]
                self.dist[numbers[0]][numbers[1]] = numbers[2]
                self.dist[numbers[1]][numbers[0]] = numbers[2]
                numLines = numLines-1
@@ -139,7 +140,7 @@ class Graph:
                         parent[v] = u
             notUsed.remove(weight.index(min(weight)))
             used.append(weight.index(min(weight)))
-            print(used)
             weight[weight.index(min(weight))] = 9999
-        print(used)
         print(parent)
+        print(used)
+        self.perm = used
