@@ -21,18 +21,33 @@ def nonMetricGraph(numNodes, maxDist):
 def metricGraph(numNodes, maxDist):
     writer = open('metricGraph', 'w', encoding='utf-8')
     writer.truncate(0)
-    dist = [[0 for i in range(numNodes)] for j in range(numNodes)]
-    for u in range(numNodes-1):
-        for v in range(u+1, numNodes):
-            if u == 0:
-                distance = random.randint(1, maxDist)
-            else:
-                minDist = maxDist*2
-                for x in range(u-1):
-                    if dist[u][x] + dist[x][v] < minDist:
-                        minDist = dist[u][x] + dist[x][v]
-                distance = random.randint(1, minDist)
+    dist = [[None for i in range(numNodes)] for j in range(numNodes)]
+    distance = random.randint(1,maxDist)
+    dist[0][1] = distance
+    dist[1][0] = distance
+    writer.write("0 1 " + str(distance) + "\n")
+    print("0 1 " + str(distance) + "\n")
+    for u in range(2,numNodes):
+        distance = random.randint(1,maxDist)
+        dist[u][u-1] = distance
+        dist[u-1][u] = distance
+        writer.write(str(u) + " " + str(u-1) + " " + str(distance) + "\n")
+        print(str(u) + " " + str(u-1) + " " + str(distance) + "\n")
+        for v in range(u-1):
+            distance = math.floor(math.sqrt(dist[u][u-1]*dist[u][u-1] + dist[u-1][v]*dist[v][u-1]))
+            if distance > maxDist:
+                distance=maxDist
             dist[u][v] = distance
             dist[v][u] = distance
             writer.write(str(u) + " " + str(v) + " " + str(distance) + "\n")
+            print(str(u) + " " + str(v) + " " + str(distance) + "\n")
     writer.close()
+    for u in range(numNodes):
+        for v in range(numNodes):
+            if u!=v:
+                for x in range(numNodes):
+                    if x!= u and x!=v:
+                        if dist[u][v]>dist[u][x]+dist[x][v]:
+                            print(False)
+                            print(str(u) + " " + str(x) + " " + str(v) + str(dist[u][v]) + str(dist[u][x]) + str(dist[x][v]))
+    print(True)
