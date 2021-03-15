@@ -37,16 +37,16 @@ class Graph:
                     self.dist[i][j] = distance
                     self.dist[j][i] = distance
         else:
-            while numLines>0:
+            for i in range(numLines):
                line = reader.readline()
                numbers = [int(s) for s in line.split()]
                self.dist[numbers[0]][numbers[1]] = numbers[2]
                self.dist[numbers[1]][numbers[0]] = numbers[2]
-               numLines = numLines-1
 
         for i in range(self.n):
             self.perm[i] = i
-        
+
+        reader.close()
 
     # Complete as described in the spec, to calculate the cost of the
     # current tour (as represented by self.perm).
@@ -109,7 +109,6 @@ class Graph:
                 for i in range(j):
                     if self.tryReverse(i,j):
                         better = True
-
                         
     # Implement the Greedy heuristic which builds a tour starting
     # from node 0, taking the closest (unused) node as 'next'
@@ -127,7 +126,8 @@ class Graph:
         self.perm = used
 
     def Prim(self):
-        weight = [9999]*self.n
+        maxWeight = max(max(x) for x in self.dist)+1
+        weight = [maxWeight]*self.n
         parent = [0]*self.n
         used = [0]
         notUsed = self.perm
@@ -140,7 +140,7 @@ class Graph:
                         parent[v] = u
             notUsed.remove(weight.index(min(weight)))
             used.append(weight.index(min(weight)))
-            weight[weight.index(min(weight))] = 9999
+            weight[weight.index(min(weight))] = maxWeight
         print(parent)
         print(used)
         self.perm = used
