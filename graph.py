@@ -132,18 +132,6 @@ class Graph:
     def Approx(self):
         maxWeight = max(max(x) for x in self.dist)+1
         weight = [maxWeight]*self.n
-        #mst = [0] * self.n
-        #visited = [False] * self.n
-        #u = 0
-        #while (False in visited):
-        #    visited[u] = True
-        #    for v in range(self.n):
-        #        if self.dist[u][v] < weight[v] and not visited[v]:
-        #            mst[v] = u 
-        #            weight[v] = self.dist[u][v]
-        #    u = weight.index(min(weight))
-        #    weight[u] = maxWeight
-
         mst = [0]*self.n
         used = [0]
         notUsed = self.perm
