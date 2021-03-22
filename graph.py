@@ -43,10 +43,14 @@ class Graph:
                self.dist[numbers[0]][numbers[1]] = numbers[2]
                self.dist[numbers[1]][numbers[0]] = numbers[2]
 
+        self.initPerm()
+        reader.close()
+
+    # Helper function to initialise self.perm (mostly seperated for 
+    # testing puposes)
+    def initPerm(self):
         for i in range(self.n):
             self.perm[i] = i
-
-        reader.close()
 
     # Complete as described in the spec, to calculate the cost of the
     # current tour (as represented by self.perm).
@@ -55,7 +59,6 @@ class Graph:
         for i in range(self.n-1):
             val += self.dist[self.perm[i]][self.perm[i+1]]
         val += self.dist[self.perm[0]][self.perm[self.n-1]]
-        print(self.perm)
         return val
 
     # Attempt the swap of cities i and i+1 in self.perm and commit
@@ -125,10 +128,10 @@ class Graph:
             curNode = used[i+1]
         self.perm = used
 
+    # Own algorithm implementation taken from pseudocode in CLRS
     def Prim(self):
         maxWeight = max(max(x) for x in self.dist)+1
         weight = [maxWeight]*self.n
-        parent = [0]*self.n
         used = [0]
         notUsed = self.perm
         notUsed.remove(0)
@@ -137,10 +140,8 @@ class Graph:
                 for u in used:
                     if self.dist[u][v] < weight[v] and u!=v:
                         weight[v] = self.dist[u][v]
-                        parent[v] = u
-            notUsed.remove(weight.index(min(weight)))
-            used.append(weight.index(min(weight)))
-            weight[weight.index(min(weight))] = maxWeight
-        print(parent)
-        print(used)
+            uIndex = weight.index(min(weight))
+            notUsed.remove(uIndex)
+            used.append(uIndex)
+            weight[uIndex] = maxWeight
         self.perm = used
