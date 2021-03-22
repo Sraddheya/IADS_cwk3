@@ -129,9 +129,22 @@ class Graph:
         self.perm = used
 
     # Own algorithm implementation taken from pseudocode in CLRS
-    def Prim(self):
+    def Approx(self):
         maxWeight = max(max(x) for x in self.dist)+1
         weight = [maxWeight]*self.n
+        #mst = [0] * self.n
+        #visited = [False] * self.n
+        #u = 0
+        #while (False in visited):
+        #    visited[u] = True
+        #    for v in range(self.n):
+        #        if self.dist[u][v] < weight[v] and not visited[v]:
+        #            mst[v] = u 
+        #            weight[v] = self.dist[u][v]
+        #    u = weight.index(min(weight))
+        #    weight[u] = maxWeight
+
+        mst = [0]*self.n
         used = [0]
         notUsed = self.perm
         notUsed.remove(0)
@@ -140,8 +153,19 @@ class Graph:
                 for u in used:
                     if self.dist[u][v] < weight[v] and u!=v:
                         weight[v] = self.dist[u][v]
-            uIndex = weight.index(min(weight))
-            notUsed.remove(uIndex)
-            used.append(uIndex)
-            weight[uIndex] = maxWeight
-        self.perm = used
+                        mst[v] = u
+            minIndex = weight.index(min(weight))
+            notUsed.remove(minIndex)
+            used.append(minIndex)
+            weight[minIndex] = maxWeight
+        
+        visited = []
+        stack = [0]
+        while len(stack) != 0:
+            node = stack.pop()
+            for u in range(self.n):
+                if mst[u] == node and not (node in visited):
+                    stack.append(u)
+            visited.append(node)
+        visited.pop() # because extra 0 is added on the end
+        self.perm = visited
